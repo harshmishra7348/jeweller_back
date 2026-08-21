@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title th:text="'Invoice - ' + ${invoiceNumber}">Invoice</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .invoice-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Section */
+        .invoice-header {
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #000;
+            margin-bottom: 20px;
+        }
+
+        .invoice-type {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .company-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 10px 0 5px 0;
+        }
+
+        .company-info {
+            font-size: 11px;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .company-contact {
+            font-size: 10px;
+            color: #333;
+        }
+
+        /* Main Content Section */
+        .invoice-content {
+            margin-bottom: 20px;
+        }
+
+        /* Bill To and Invoice Details */
+        .bill-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #000;
+            padding-bottom: 15px;
+        }
+
+        .bill-to {
+            flex: 1;
+            font-size: 11px;
+        }
+
+        .bill-to-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .customer-name {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .customer-details {
+            margin-bottom: 8px;
+        }
+
+        .customer-details span {
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .invoice-details {
+            flex: 1;
+            text-align: right;
+            font-size: 11px;
+        }
+
+        .invoice-detail-row {
+            margin-bottom: 2px;
+            display: block;
+            text-align: right;
+        }
+
+        .invoice-detail-label {
+            font-weight: bold;
+            display: inline;
+            margin-right: 5px;
+        }
+
+        .invoice-detail-value {
+            display: inline;
+            text-align: right;
+        }
+
+        /* Pan and GST Section */
+        .pan-gst-section {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #000;
+            padding-bottom: 10px;
+        }
+
+        .pan-gst-left {
+            flex: 1;
+        }
+
+        .pan-gst-left span {
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .pan-gst-left strong {
+            font-weight: bold;
+        }
+
+        /* Items Table */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            font-size: 11px;
+        }
+
+        .items-table thead {
+            background-color: #f0f0f0;
+            border: 1px solid #000;
+        }
+
+        .items-table th {
+            border: 1px solid #000;
+            padding: 6px 4px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 10px;
+        }
+
+        .items-table td {
+            border: 1px solid #000;
+            padding: 6px 4px;
+            text-align: right;
+        }
+
+        .items-table td:first-child {
+            text-align: left;
+        }
+
+        .items-table td:nth-child(2) {
+            text-align: center;
+        }
+
+        .items-table td:nth-child(3) {
+            text-align: center;
+        }
+
+        .items-table tbody tr:last-child td {
+            border-bottom: 2px solid #000;
+        }
+
+        /* Amounts and Summary Section */
+        .summary-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .summary-left {
+            flex: 1;
+            font-size: 11px;
+        }
+
+        .summary-left-text {
+            border-bottom: 1px solid #000;
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .summary-right {
+            flex: 0 0 280px;
+            font-size: 11px;
+        }
+
+        .summary-right table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .summary-right table tr {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .summary-right table td {
+            padding: 2px 8px;
+        }
+
+        .summary-right table td:first-child {
+            text-align: left;
+            font-weight: bold;
+            width: 60%;
+        }
+
+        .summary-right table td:last-child {
+            text-align: right;
+            width: 40%;
+        }
+
+        .summary-right table tr:last-child {
+            border-bottom: 2px solid #000;
+            font-weight: bold;
+        }
+
+        .summary-right table tr:last-child td:last-child {
+            font-weight: bold;
+        }
+
+        /* Bank and Terms Section */
+        .bank-terms-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            border-top: 1px solid #000;
+            padding-top: 10px;
+        }
+
+        .bank-details {
+            flex: 1;
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        .bank-details span {
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .bank-details strong {
+            font-weight: bold;
+        }
+
+        .terms-section {
+            flex: 1;
+            font-size: 9px;
+            line-height: 1.5;
+        }
+
+        .terms-section ol {
+            margin-left: 15px;
+            padding-left: 0;
+        }
+
+        .terms-section li {
+            margin-bottom: 3px;
+        }
+
+        .signature-section {
+            text-align: right;
+            margin-top: 30px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* Amount in Words */
+        .amount-words {
+            font-size: 10px;
+            margin-top: 8px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="invoice-container">
+
+    <!-- Header -->
+    <div class="invoice-header">
+        <div class="invoice-type">TAX INVOICE<br/>Cash / Debit Memo</div>
+        <div class="company-title" th:text="${billFromCompany}">JAYDEEP TRADERS</div>
+        <div class="company-info">
+            <span th:text="${yourCompanyAddress}">17 - Chotihaswala Chambers, Bhadharianj Street, Near Sats Bazar, Bardan Gali, Rajkot - 1</span>
+        </div>
+        <div class="company-contact">
+            Contact No: <span th:text="${yourCompanyContact}">9427223075</span> Email: <span th:text="${yourCompanyEmail}">allchakaria@oa.com</span>
+        </div>
+    </div>
+
+    <!-- Bill To and Invoice Details -->
+    <div class="bill-section">
+        <div class="bill-to">
+            <div class="bill-to-label">To,</div>
+            <div class="customer-name" th:text="${customerName}">BHARATKUMAR &amp; CO</div>
+            <div class="customer-details">
+                <span th:text="${customerAddress}">BHAVANGAR</span>
+                <span th:if="${customerGSTNumber}"><strong>GST NO:</strong> <span th:text="${customerGSTNumber}"></span></span>
+            </div>
+        </div>
+
+        <div class="invoice-details">
+            <div class="invoice-detail-row">
+                <span class="invoice-detail-label">INV No. :</span>
+                <span class="invoice-detail-value" th:text="${invoiceNumber}">157</span>
+            </div>
+            <div class="invoice-detail-row">
+                <span class="invoice-detail-label">DATE :</span>
+                <span class="invoice-detail-value" th:text="${invoiceDate}">01-01-2026</span>
+            </div>
+            <div class="invoice-detail-row">
+                <span class="invoice-detail-label">DUE DATE :</span>
+                <span class="invoice-detail-value" th:text="${dueDate}"></span>
+            </div>
+            <div class="invoice-detail-row">
+                <span class="invoice-detail-label">TRANSPORT :</span>
+                <span class="invoice-detail-value" th:text="${transport}">NEW KHODIAR</span>
+            </div>
+            <div class="invoice-detail-row">
+                <span class="invoice-detail-label">L.R. No. :</span>
+                <span class="invoice-detail-value" th:text="${lrNumber}"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Items Table -->
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>Item Description</th>
+                <th>Qty</th>
+                <th>Unit Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="item, stat : ${items}">
+                <td th:text="${item.description}"></td>
+                <td th:text="${item.quantity}"></td>
+                <td th:text="${item.unitPrice}"></td>
+                <td th:text="${item.total}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Summary Section -->
+    <div class="summary-section">
+        <div class="summary-left">
+            <div class="summary-left-text" th:text="'Rs. ' + ${amountInWords}">Rs. seventy one thousand three hundred twenty five.</div>
+        </div>
+
+        <div class="summary-right">
+            <table>
+                <tr>
+                    <td>Less Dis</td>
+                    <td th:text="${discount}">0.00</td>
+                </tr>
+                <tr>
+                    <td>Labour</td>
+                    <td th:text="${labour}">0.00</td>
+                </tr>
+                <tr>
+                    <td>Taxable Amount</td>
+                    <td th:text="${subtotal}">67928.18</td>
+                </tr>
+                <tr>
+                    <td>SGST <span th:text="${sgstRate}">@2.5%</span></td>
+                    <td th:text="${sgstAmount}">1698.20</td>
+                </tr>
+                <tr>
+                    <td>CGST <span th:text="${cgstRate}">@2.5%</span></td>
+                    <td th:text="${cgstAmount}">1698.20</td>
+                </tr>
+                <tr>
+                    <td>Grand Total</td>
+                    <td th:text="${grandTotal}">71325.00</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Bank and Terms Section -->
+    <div class="bank-terms-section">
+        <div class="bank-details">
+            <span><strong>HSN CODE :</strong> <span th:text="${hsn}">0902</span></span>
+            <span><strong>Bank Detail :</strong> <span th:text="${bankName}">INDUSIND BANK - RAJKOT BRANCH</span></span>
+            <span><strong>A/C. No. :</strong> <span th:text="${accountNumber}">20009986588</span></span>
+            <span><strong>IFSC Code :</strong> <span th:text="${ifscCode}">INDB0000079</span></span>
+            <span><strong>GSTIN :</strong> <span th:text="${gst}">24AEPPS4D8M1</span></span>
+        </div>
+
+        <div class="terms-section">
+            <ol>
+                <li>Payment should be done within 7 days otherwise interest at 2% will be charged.</li>
+                <li>Our responsibility ceases as goods leave our premises.</li>
+                <li>Goods once sold will not be taken back or exchanged.</li>
+                <li>We hereby certify that the good mentioned in this invoice is warranted to be of the nature and quality as described.</li>
+                <li>Subject to Rajkot jurisdiction. E &amp; O.E.</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Signature -->
+    <div class="signature-section">
+        For, <span th:text="${billFromCompany}">Jaydeep Traders</span>
+    </div>
+
+</div>
+
+</body>
+</html>

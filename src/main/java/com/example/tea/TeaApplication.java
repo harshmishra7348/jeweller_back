@@ -1,0 +1,16 @@
+package com.example.tea;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.system.ApplicationPid;
+
+
+@SpringBootApplication
+public class TeaApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(TeaApplication.class, args);
+		System.out.println("App PID: " + new ApplicationPid());
+	}
+
+}
